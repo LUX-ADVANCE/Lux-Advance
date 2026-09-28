@@ -1511,7 +1511,7 @@
       const statusPerfil =
         novoStatusNormalizado === "aprovado"
           ? "ativo"
-          : "inativo";
+          : "bloqueado";
 
 
       const resultadoPerfil =
