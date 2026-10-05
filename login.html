@@ -381,7 +381,25 @@ body::after{
 .tela.ativa{
 
   display:block;
+  animation:luxScreenEnter .36s cubic-bezier(.2,.75,.25,1) both;
 
+}
+
+@keyframes luxScreenEnter{
+  from{
+    opacity:0;
+    transform:translateY(12px) scale(.985);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .tela.ativa{
+    animation:none;
+  }
 }
 
 
@@ -596,6 +614,21 @@ input:focus{
     0 0 18px
     rgba(248,213,138,.06);
 
+}
+
+input:user-invalid{
+  border-color:rgba(255,107,125,.8);
+  box-shadow:0 0 0 3px rgba(255,107,125,.1);
+}
+
+input:user-valid{
+  border-color:rgba(83,216,138,.55);
+}
+
+button:disabled{
+  cursor:wait;
+  opacity:.75;
+  transform:none;
 }
 
 
@@ -1112,6 +1145,32 @@ function mostrarTela(id){
 
   }
 
+  function definirBotaoCarregando(formulario, carregando){
+
+    const botao =
+      formulario.querySelector('button[type="submit"]');
+
+    if(!botao){
+      return;
+    }
+
+    if(carregando){
+      botao.dataset.textoOriginal = botao.textContent;
+      botao.disabled = true;
+      botao.setAttribute("aria-busy", "true");
+      botao.textContent = "Aguarde...";
+      return;
+    }
+
+    botao.disabled = false;
+    botao.removeAttribute("aria-busy");
+
+    if(botao.dataset.textoOriginal){
+      botao.textContent = botao.dataset.textoOriginal;
+      delete botao.dataset.textoOriginal;
+    }
+  }
+
 }
 
 
@@ -1313,6 +1372,7 @@ if(formLogin){
 
       }
 
+      definirBotaoCarregando(formLogin, true);
 
       try{
 
@@ -1433,6 +1493,9 @@ if(formLogin){
         }
 
       }
+      finally{
+        definirBotaoCarregando(formLogin, false);
+      }
 
     }
   );
@@ -1512,6 +1575,7 @@ if(formUsuario){
 
       }
 
+      definirBotaoCarregando(formUsuario, true);
 
       try{
 
@@ -1575,6 +1639,9 @@ if(formUsuario){
 
         }
 
+      }
+      finally{
+        definirBotaoCarregando(formUsuario, false);
       }
 
     }
