@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080708">
+  <meta name="description" content="Conheça os perfis verificados da vitrine LUX.">
+  <title>Vitrine exclusiva — LUX</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icone-lux-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="./app.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./vitrine.css">
+</head>
+<body class="vitrine-page">
+  <header class="vitrine-header">
+    <a class="vitrine-brand" href="./index.html" aria-label="LUX — página inicial">LUX<span>ADVANCE</span></a>
+    <nav class="vitrine-nav" aria-label="Navegação principal">
+      <a href="./index.html">Início</a>
+      <a href="./login.html">Entrar</a>
+      <a class="vitrine-nav-cta" href="./cadastro-usuario.html">Criar conta</a>
+    </nav>
+  </header>
+
+  <main class="vitrine-shell">
+    <section class="vitrine-hero" aria-labelledby="hero-title">
+      <p class="vitrine-eyebrow">Uma seleção LUX, feita para você</p>
+      <h1 id="hero-title">Encontros com <em>presença</em>.</h1>
+      <p class="vitrine-lead">Conheça perfis verificados em uma vitrine reservada, elegante e atualizada pela nossa equipe.</p>
+
+      <div class="filter-panel" aria-label="Filtros da vitrine">
+        <div class="filter-group">
+          <span class="filter-label" id="category-label">Categoria</span>
+          <div class="filter-chips" id="categoryFilters" role="group" aria-labelledby="category-label">
+            <button class="filter-chip is-active" type="button" data-category="todas" aria-pressed="true">Todas</button>
+            <button class="filter-chip" type="button" data-category="feminino" aria-pressed="false">Feminino</button>
+            <button class="filter-chip" type="button" data-category="masculino" aria-pressed="false">Masculino</button>
+            <button class="filter-chip" type="button" data-category="lgbtq" aria-pressed="false">LGBTQIA+</button>
+          </div>
+        </div>
+        <label class="city-filter" for="cityFilter">
+          <span class="filter-label">Cidade</span>
+          <select id="cityFilter">
+            <option value="">Todas as cidades</option>
+          </select>
+        </label>
+        <div class="filter-group">
+          <span class="filter-label" id="plan-label">Plano</span>
+          <div class="filter-chips" id="planFilters" role="group" aria-labelledby="plan-label">
+            <button class="filter-chip is-active" type="button" data-plan="todos" aria-pressed="true">Todos</button>
+            <button class="filter-chip" type="button" data-plan="vip" aria-pressed="false">VIP</button>
+            <button class="filter-chip" type="button" data-plan="diamond" aria-pressed="false">Diamond</button>
+          </div>
+        </div>
+      </div>
+      <p id="resultCount" class="result-count" aria-live="polite">Preparando sua seleção…</p>
+    </section>
+
+    <section class="vitrine-results" aria-label="Perfis disponíveis">
+      <div id="vitrineGrid" class="vitrine-grid" aria-live="polite" aria-busy="true">
+        <div class="model-skeleton" aria-hidden="true"><span></span><i></i><i></i></div>
+        <div class="model-skeleton" aria-hidden="true"><span></span><i></i><i></i></div>
+        <div class="model-skeleton" aria-hidden="true"><span></span><i></i><i></i></div>
+      </div>
+    </section>
+    <footer class="vitrine-footer">LUX ADVANCE <span>·</span> Sensualidade &amp; sofisticação</footer>
+  </main>
+
+  <dialog class="contact-dialog" id="contactDialog" aria-labelledby="contactTitle">
+    <button class="dialog-close" type="button" aria-label="Fechar" data-close-dialog>×</button>
+    <span class="dialog-mark" aria-hidden="true">✦</span>
+    <p class="vitrine-eyebrow">Acesso exclusivo</p>
+    <h2 id="contactTitle">Cadastre-se para chamar</h2>
+    <p>Crie sua conta gratuita ou entre para continuar com o contato de <strong id="contactModelName">este perfil</strong>.</p>
+    <div class="dialog-actions">
+      <a class="lux-button lux-button-primary" id="loginLink" href="./login.html">Entrar</a>
+      <a class="lux-button lux-button-secondary" id="signupLink" href="./cadastro-usuario.html">Criar conta</a>
+    </div>
+    <p class="dialog-note">O contato só é solicitado ao Supabase depois da autenticação.</p>
+  </dialog>
+
+  <dialog class="contact-dialog info-dialog" id="noticeDialog" aria-labelledby="noticeTitle">
+    <button class="dialog-close" type="button" aria-label="Fechar" data-close-dialog>×</button>
+    <span class="dialog-mark" aria-hidden="true">✦</span>
+    <h2 id="noticeTitle">Não foi possível concluir</h2>
+    <p id="noticeMessage">Tente novamente em instantes.</p>
+    <button class="lux-button lux-button-primary" type="button" data-close-dialog>Entendi</button>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js?v=5"></script>
+  <script src="./auth.js?v=10"></script>
+  <script src="./vitrine.js"></script>
+  <script src="./pwa.js"></script>
+</body>
+</html>
