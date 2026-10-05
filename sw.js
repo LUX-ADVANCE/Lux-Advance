@@ -2,17 +2,19 @@ const CACHE_NAME = 'lux-app-v3';
 const ARQUIVOS = [
   './',
   './index.html',
+  './lux-halloween.jpg',
+  './halloween-feminina.jpg',
   './logo4.png',
+  './icone-lux-192.png',
+  './icone-lux-512.png',
   './vip1.png',
-  './vip2.png',
-  './vip3.png',
-  './vip4.png'
+  './vip3.png'
 ];
 
 // Instala e guarda arquivos
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => Promise.all(ARQUIVOS.map(a => cache.add(a).catch(() => {}))))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ARQUIVOS))
   );
 });
 
