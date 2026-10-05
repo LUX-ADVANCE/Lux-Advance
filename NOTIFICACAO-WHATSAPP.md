@@ -9,8 +9,9 @@ A função `notificar-modelo-pendente` usa a WhatsApp Cloud API da Meta. Ela rec
 3. Gere um token de acesso com permissão `whatsapp_business_messaging`. Para produção, use um token de sistema permanente e restrinja seus ativos.
 4. Crie e envie para aprovação um modelo de mensagem em português (`pt_BR`), por exemplo:
 
-   **Nome:** `lux_modelo_pendente`  
-   **Categoria:** Utility  
+   **Nome:** `lux_modelo_pendente`
+
+   **Categoria:** Utility
    **Corpo:** `🔔 LUX: nova modelo pendente de aprovação — {{1}}, {{2}}. Acesse o painel: {{3}}`
 
    A função envia três parâmetros nessa ordem: nome da modelo, cidade e URL do painel. Configure o destinatário `ADMIN_WHATSAPP_NUMBER` no formato internacional (apenas números, por exemplo `55DDDNUMERO`).
@@ -38,7 +39,7 @@ O Supabase disponibiliza `SUPABASE_SERVICE_ROLE_KEY` automaticamente para Edge F
 
 ## 3. Aplicar a migração de contato
 
-Antes de publicar a vitrine, revise e execute `supabase/vitrine-contato.sql` no SQL Editor do Supabase. A migração restringe a leitura anônima às colunas públicas e cria `public.obter_contato_modelo(uuid)`, que só pode ser executada por contas autenticadas. Ela também cria a tabela privada usada para idempotência das notificações.
+Confirme que as tabelas e políticas do schema existente já foram aplicadas. Antes de publicar a vitrine, revise e execute `supabase/vitrine-contato.sql` no SQL Editor do Supabase. A migração restringe a leitura anônima às colunas públicas e cria `public.obter_contato_modelo(uuid)`, que só pode ser executada por contas autenticadas. Ela também cria a tabela privada usada para idempotência das notificações.
 
 ## 4. Configurar o Database Webhook
 
@@ -46,7 +47,7 @@ Antes de publicar a vitrine, revise e execute `supabase/vitrine-contato.sql` no 
 2. Selecione a tabela `public.modelo_perfis`, método `POST` e os eventos **INSERT** e **UPDATE**.
 3. Use a URL `https://SEU-PROJETO.supabase.co/functions/v1/notificar-modelo-pendente`.
 4. Adicione o header `x-webhook-secret` com o mesmo valor de `WEBHOOK_SECRET` salvo nos secrets.
-5. Execute `ALTER TABLE public.modelo_perfis REPLICA IDENTITY FULL;` para que `old_record` contenha o status anterior e a função detecte transições com precisão. O conteúdo permanece entre Supabase e a Edge Function e não é registrado nos logs.
+5. A migração de contato configura `REPLICA IDENTITY FULL` para que `old_record` contenha o status anterior e a função detecte transições com precisão. O conteúdo permanece entre Supabase e a Edge Function e não é registrado nos logs.
 6. Salve. A função rejeita com `401` chamadas sem o segredo correto.
 
 ## 5. Testar

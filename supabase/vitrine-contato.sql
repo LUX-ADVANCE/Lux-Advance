@@ -101,7 +101,7 @@ language plpgsql
 set search_path = pg_catalog, public
 as $$
 begin
-  new.atualizado_em := now();
+  new.atualizado_em := clock_timestamp();
   return new;
 end;
 $$;

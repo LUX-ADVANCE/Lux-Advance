@@ -16,6 +16,13 @@
   button.className = "lux-install-app";
   button.textContent = "Instalar app";
   button.setAttribute("aria-label", "Instalar LUX como aplicativo");
+  button.addEventListener("focus", () => {
+    button.style.outline = "3px solid #fff0ad";
+    button.style.outlineOffset = "3px";
+  });
+  button.addEventListener("blur", () => {
+    button.style.outline = "none";
+  });
   Object.assign(button.style, {
     position: "fixed",
     zIndex: "10000",
