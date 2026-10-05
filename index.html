@@ -1,35 +1,20 @@
-<!DOCTYPE html><html lang="pt-BR"><head>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#c9a227">
+<meta name="description" content="LUX Advance — Mais que um site, uma experiência.">
+<title>LUX Advance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icone-lux-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="apple-touch-icon" href="./icone-lux-192.png"><meta charset="UTF-8"><meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
-
-«»
-
-<meta
-name="theme-color"
-content="#c9a227"
-
-«»
-
-<meta
-name="description"
-content="LUX Advance — Mais que um site, uma experiência."
-
-«»
-
-<title>LUX Advance</title><link rel="preconnect" href="https://fonts.googleapis.com"><link
-  rel="preconnect"
-  href="https://fonts.gstatic.com"
-  crossorigin
-><link
-  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap"
-  rel="stylesheet"
-><link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-><link rel="manifest" href="./manifest.json"><style>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
 
 /* ==================================================
    VARIÁVEIS
@@ -403,482 +388,300 @@ body::after{
 
 
 /* ==================================================
-   CABEÇALHO
+   CABEÇALHO + MENU (barra única)
 ================================================== */
 
-header{
-
+header.topo{
+  position:sticky;
+  top:0;
+  z-index:50;
   width:100%;
-
-  min-height:108px;
-
-  position:relative;
-
-  z-index:20;
-
-  display:flex;
-
-  align-items:flex-start;
-
-  justify-content:space-between;
-
+  background:linear-gradient(180deg,rgba(8,6,3,.82),rgba(8,6,3,.62));
+  -webkit-backdrop-filter:blur(14px) saturate(1.2);
+  backdrop-filter:blur(14px) saturate(1.2);
+  border-bottom:1px solid rgba(201,162,39,.35);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
 }
 
+header.topo::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:-1px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--ouro-claro),transparent);
+  opacity:.8;
+  pointer-events:none;
+}
 
-/* ==================================================
-   MARCA LUX ADVANCE NO CABEÇALHO
-================================================== */
+.barra{
+  max-width:1200px;
+  margin:0 auto;
+  padding:10px 22px;
+  min-height:72px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:18px;
+}
 
 .marca-header{
-
-  position:absolute;
-
-  top:18px;
-
-  left:0;
-
+  justify-self:start;
   display:flex;
-
   flex-direction:column;
-
   align-items:flex-start;
-
   text-decoration:none;
-
-  z-index:25;
-
+  border-radius:8px;
+  min-height:44px;
+  justify-content:center;
 }
-
 
 .marca-lux{
-
-  font-family:
-    "Playfair Display",
-    Georgia,
-    serif;
-
-  font-size:34px;
-
-  line-height:.9;
-
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:32px;
+  line-height:.95;
   font-style:italic;
-
   font-weight:700;
-
   letter-spacing:2px;
-
-  background:
-
-    linear-gradient(
-      180deg,
-      #ffffff 0%,
-      #fff8d9 20%,
-      #f4dd86 42%,
-      #d4ae32 68%,
-      #c9a227 82%,
-      #80600e 100%
-    );
-
+  background:linear-gradient(180deg,#fff 0%,#fff8d9 20%,#f4dd86 42%,#d4ae32 68%,#c9a227 82%,#80600e 100%);
   -webkit-background-clip:text;
-
   background-clip:text;
-
   color:transparent;
-
-  filter:
-
-    drop-shadow(
-      0 2px 3px
-      rgba(0,0,0,.95)
-    )
-
-    drop-shadow(
-      0 0 9px
-      rgba(255,232,150,.38)
-    );
-
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.95)) drop-shadow(0 0 9px rgba(255,232,150,.38));
 }
-
 
 .marca-advance{
-
-  margin-top:5px;
-
+  margin-top:3px;
   padding-left:3px;
-
-  font-family:
-    "Cormorant Garamond",
-    Georgia,
-    serif;
-
-  font-size:14px;
-
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:13px;
   font-weight:700;
-
-  letter-spacing:7px;
-
-  color:#f1d36b;
-
-  text-shadow:
-
-    0 2px 6px
-    rgba(0,0,0,.95),
-
-    0 0 8px
-    rgba(201,162,39,.35);
-
+  letter-spacing:6px;
+  color:var(--ouro-claro);
+  text-shadow:0 2px 6px rgba(0,0,0,.95);
 }
-
-
-/* ==================================================
-   BOTÃO ENTRAR
-================================================== */
-
-.botoes-acesso{
-
-  position:absolute;
-
-  top:20px;
-
-  right:0;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:flex-end;
-
-  z-index:30;
-
-}
-
-
-.btn-entrar{
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  gap:9px;
-
-  width:132px;
-
-  height:50px;
-
-  border-radius:14px;
-
-  text-decoration:none;
-
-  color:#17120a;
-
-  font-family:
-    "Playfair Display",
-    Georgia,
-    serif;
-
-  font-size:16px;
-
-  font-weight:700;
-
-  letter-spacing:.3px;
-
-  background:
-
-    linear-gradient(
-      145deg,
-      #fff0a8 0%,
-      #f0d36b 35%,
-      #c9a227 70%,
-      #886711 100%
-    );
-
-  border:1px solid #ffe89a;
-
-  box-shadow:
-
-    0 7px 24px rgba(0,0,0,.50),
-
-    0 0 16px rgba(201,162,39,.30),
-
-    inset 0 1px rgba(255,255,255,.70);
-
-  transition:
-
-    transform .25s ease,
-    filter .25s ease,
-    box-shadow .25s ease;
-
-}
-
-
-.btn-entrar:hover{
-
-  transform:translateY(-2px);
-
-  filter:brightness(1.10);
-
-  box-shadow:
-
-    0 10px 28px rgba(0,0,0,.55),
-
-    0 0 25px rgba(240,216,120,.45);
-
-}
-
-
-.btn-entrar i{
-  font-size:16px;
-}
-
-
-/* ==================================================
-   MENU
-================================================== */
 
 .menu-area{
-
-  width:100%;
-
-  position:relative;
-
-  z-index:15;
-
-  margin-top:28px;
-
-  margin-bottom:42px;
-
-  padding:15px 14px 16px;
-
-  background:transparent;
-
-  border:none;
-
-  box-shadow:none;
-
+  justify-self:center;
+  min-width:0;
 }
-
 
 .menu{
-
-  width:100%;
-
   display:flex;
-
-  flex-wrap:wrap;
-
-  justify-content:center;
-
   align-items:center;
-
-  gap:11px;
-
+  justify-content:center;
+  gap:4px;
 }
-
 
 .menu a{
-
   position:relative;
-
-  display:flex;
-
+  display:inline-flex;
   align-items:center;
-
   justify-content:center;
-
-  gap:9px;
-
-  min-width:132px;
-
-  height:48px;
-
-  padding:0 18px;
-
-  border-radius:12px;
-
+  gap:8px;
+  min-height:44px;
+  padding:0 14px;
+  border-radius:999px;
+  border:1px solid transparent;
   text-decoration:none;
-
-  font-family:
-    "Cormorant Garamond",
-    Georgia,
-    serif;
-
+  white-space:nowrap;
+  font-family:"Cormorant Garamond",Georgia,serif;
   font-size:18px;
-
   font-weight:700;
-
-  letter-spacing:.3px;
-
+  letter-spacing:.4px;
   color:#eee1c8;
-
-  background:rgba(0,0,0,.38);
-
-  border:1px solid rgba(201,162,39,.75);
-
-  box-shadow:
-
-    0 5px 16px rgba(0,0,0,.30),
-
-    inset 0 1px rgba(255,255,255,.08);
-
-  backdrop-filter:blur(2px);
-
-  -webkit-backdrop-filter:blur(2px);
-
-  transition:all .28s ease;
-
+  transition:color .25s ease,background .25s ease,border-color .25s ease,box-shadow .25s ease;
 }
-
-
-.menu a::before{
-
-  content:"";
-
-  position:absolute;
-
-  top:2px;
-
-  left:22%;
-
-  right:22%;
-
-  height:1px;
-
-  background:
-
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,235,170,.90),
-      transparent
-    );
-
-  opacity:.75;
-
-}
-
 
 .menu a i{
-
+  width:18px;
+  text-align:center;
+  font-size:15px;
   color:var(--ouro-claro);
-
-  font-size:16px;
-
-  filter:
-    drop-shadow(
-      0 0 5px
-      rgba(201,162,39,.40)
-    );
-
 }
-
 
 .menu a:hover{
-
-  transform:translateY(-3px);
-
   color:#fff2c9;
-
-  border-color:#f2d774;
-
-  background:rgba(35,27,10,.58);
-
-  box-shadow:
-
-    0 8px 23px rgba(0,0,0,.48),
-
-    0 0 17px rgba(201,162,39,.20),
-
-    inset 0 0 15px rgba(201,162,39,.08);
-
+  background:rgba(201,162,39,.12);
+  border-color:rgba(241,211,107,.45);
 }
 
-
-.menu a.ativo{
-
+.menu a[aria-current="page"]{
   color:#fff2c9;
-
-  border-color:#f1d36d;
-
-  background:rgba(35,27,10,.48);
-
-  box-shadow:
-
-    0 0 18px rgba(201,162,39,.22),
-
-    inset 0 0 14px rgba(201,162,39,.08);
-
+  background:rgba(201,162,39,.16);
+  border-color:rgba(241,211,107,.75);
+  box-shadow:0 0 16px rgba(201,162,39,.22),inset 0 0 12px rgba(201,162,39,.08);
 }
 
+.menu a.admin{ color:#ffe7a0; }
+.menu a.pix{ color:#f5da7c; }
+.menu a.pix i{ color:#ffd700; }
 
-.menu a.pix{
-
-  color:#f5da7c;
-
-  border-color:rgba(242,215,119,.80);
-
+.acesso{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  justify-self:end;
 }
 
-
-.menu a.pix i{
-  color:#ffd700;
+.btn-entrar{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  min-width:124px;
+  min-height:44px;
+  padding:0 20px;
+  border-radius:999px;
+  text-decoration:none;
+  color:#17120a;
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:.4px;
+  background:linear-gradient(145deg,#fff0a8 0%,#f0d36b 35%,#c9a227 70%,#886711 100%);
+  border:1px solid #ffe89a;
+  box-shadow:0 6px 20px rgba(0,0,0,.5),0 0 14px rgba(201,162,39,.3),inset 0 1px rgba(255,255,255,.7);
+  transition:transform .25s ease,filter .25s ease,box-shadow .25s ease;
 }
 
+.btn-entrar:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.1);
+}
+
+.btn-menu{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  cursor:pointer;
+  color:var(--ouro-claro);
+  font-size:18px;
+  background:rgba(0,0,0,.45);
+  border:1px solid rgba(201,162,39,.7);
+}
+
+.btn-menu:hover{ background:rgba(201,162,39,.15); }
+
+a:focus-visible,
+button:focus-visible{
+  outline:2px solid var(--ouro-brilho);
+  outline-offset:3px;
+}
 
 /* ==================================================
-   ÁREA ADMIN
+   CARDS
 ================================================== */
 
-.menu a.admin{
-
-  color:#ffe7a0;
-
-  border-color:rgba(255,216,102,.88);
-
-  background:
-
-    linear-gradient(
-      145deg,
-      rgba(90,62,10,.42),
-      rgba(0,0,0,.48)
-    );
-
-  box-shadow:
-
-    0 5px 18px rgba(0,0,0,.40),
-
-    0 0 13px rgba(201,162,39,.14);
-
+.secao-cards{
+  margin-top:70px;
+  text-align:center;
 }
 
-
-.menu a.admin i{
-  color:#ffd85a;
+.secao-cards h2{
+  font-family:"Playfair Display",Georgia,serif;
+  font-style:italic;
+  font-size:clamp(28px,4vw,40px);
+  color:var(--champanhe);
+  text-shadow:0 2px 10px rgba(0,0,0,.95);
 }
 
-
-.menu a.admin:hover{
-
-  color:#fff8dc;
-
-  border-color:#ffe28a;
-
-  background:
-
-    linear-gradient(
-      145deg,
-      rgba(110,76,12,.55),
-      rgba(20,15,4,.60)
-    );
-
-  box-shadow:
-
-    0 9px 25px rgba(0,0,0,.55),
-
-    0 0 22px rgba(241,211,107,.28);
-
+.secao-cards h2::after{
+  content:"";
+  display:block;
+  width:120px;
+  height:2px;
+  margin:14px auto 0;
+  background:linear-gradient(90deg,transparent,#ffe79a,#c9a227,#ffe79a,transparent);
 }
+
+.cards{
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:22px;
+  margin-top:36px;
+  text-align:left;
+}
+
+.cards li{ display:flex; }
+
+.card{
+  position:relative;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:12px;
+  padding:26px 24px 22px;
+  border-radius:18px;
+  text-decoration:none;
+  color:var(--texto);
+  background:linear-gradient(160deg,rgba(40,30,10,.62),rgba(5,4,3,.78));
+  border:1px solid rgba(201,162,39,.55);
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+  box-shadow:0 12px 30px rgba(0,0,0,.5),inset 0 1px rgba(255,255,255,.08);
+  transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  top:0;left:20%;right:20%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,235,170,.9),transparent);
+}
+
+.card:hover,
+.card:focus-visible{
+  transform:translateY(-6px);
+  border-color:#f2d774;
+  box-shadow:0 18px 40px rgba(0,0,0,.6),0 0 24px rgba(201,162,39,.25);
+}
+
+.card-icone{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:52px;
+  height:52px;
+  border-radius:14px;
+  font-size:22px;
+  color:#17120a;
+  background:linear-gradient(145deg,#fff0a8,#f0d36b 40%,#c9a227);
+  box-shadow:0 0 16px rgba(201,162,39,.35);
+}
+
+.card h3{
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:22px;
+  color:var(--ouro-claro);
+}
+
+.card p{
+  flex:1;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:19px;
+  line-height:1.45;
+  color:var(--texto);
+}
+
+.card-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:44px;
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:15px;
+  font-weight:700;
+  color:var(--ouro-brilho);
+}
+
+.card-cta i{ transition:transform .25s ease; }
+.card:hover .card-cta i{ transform:translateX(4px); }
 
 
 /* ==================================================
@@ -1286,433 +1089,164 @@ header{
 
 
 /* ==================================================
-   TABLET
+   RESPONSIVO
 ================================================== */
 
-@media(max-width:950px){
-
-  .menu{
-    gap:9px;
+@media(max-width:1180px){
+  .barra{
+    grid-template-columns:1fr auto;
+    padding:8px 14px;
+    min-height:64px;
+    gap:10px;
   }
-
-  .menu a{
-
-    min-width:125px;
-
-    height:46px;
-
-    padding:0 15px;
-
-    font-size:17px;
-
-  }
-
-}
-
-
-/* ==================================================
-   CELULAR
-================================================== */
-
-@media(max-width:700px){
-
-  .conteudo{
-    padding:0 10px;
-  }
-
-
-  header{
-
-    min-height:112px;
-
-  }
-
-
-  .marca-header{
-
-    top:18px;
-
-    left:0;
-
-  }
-
-
-  .marca-lux{
-
-    font-size:28px;
-
-  }
-
-
-  .marca-advance{
-
-    font-size:11px;
-
-    letter-spacing:5px;
-
-  }
-
-
-  .botoes-acesso{
-
-    top:18px;
-
-    right:0;
-
-  }
-
-
-  .btn-entrar{
-
-    width:116px;
-
-    height:47px;
-
-    font-size:13px;
-
-    gap:6px;
-
-  }
-
-
-  .btn-entrar i{
-    font-size:13px;
-  }
-
+  .acesso{ order:2; }
+  .btn-menu{ display:inline-flex; }
+  .marca-lux{ font-size:28px; }
+  .marca-advance{ font-size:11px; letter-spacing:5px; }
+  .btn-entrar{ min-width:0; padding:0 16px; font-size:14px; }
 
   .menu-area{
-
-    margin-top:20px;
-
-    margin-bottom:34px;
-
-    padding:13px 7px 15px;
-
+    grid-column:1 / -1;
+    order:3;
+    justify-self:stretch;
+    display:none;
   }
-
-
+  .menu-area.aberto{ display:block; padding:6px 0 10px; }
   .menu{
-    gap:7px;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
   }
-
-
   .menu a{
-
-    min-width:
-      calc(33.333% - 7px);
-
-    height:45px;
-
-    padding:0 5px;
-
-    gap:5px;
-
-    font-size:14px;
-
+    justify-content:flex-start;
+    padding:0 14px;
+    border-radius:12px;
+    border-color:rgba(201,162,39,.35);
+    background:rgba(0,0,0,.4);
   }
-
-
-  .menu a i{
-    font-size:13px;
-  }
-
-
-  .hero{
-
-    padding:45px 5px 90px;
-
-  }
-
-
-  .hero h1{
-
-    font-size:
-      clamp(
-        45px,
-        13vw,
-        63px
-      );
-
-    letter-spacing:1px;
-
-  }
-
-
-  .hero .slogan{
-
-    font-size:17px;
-
-    letter-spacing:1px;
-
-  }
-
-
-  .hero .descricao{
-    font-size:17px;
-  }
-
-
-  .acoes-hero{
-    flex-direction:column;
-  }
-
-
-  .acao-hero{
-
-    width:min(100%,320px);
-
-    min-width:0;
-
-  }
-
-
-  .morcego{
-    font-size:18px;
-  }
-
-
-  .rodape{
-
-    margin-top:20px;
-
-    padding:28px 12px 22px;
-
-  }
-
-
-  .rodape-agencia{
-
-    font-size:17px;
-
-    letter-spacing:2px;
-
-  }
-
-
-  .rodape-idade{
-    font-size:15px;
-  }
-
-
-  .rodape-final{
-    font-size:13px;
-  }
-
 }
 
-</style></head><body><!-- ==================================================
-     MORCEGOS
-================================================== --><div
-  class="morcegos"
-  aria-hidden="true"
-><span class="morcego">🦇</span>
+@media(max-width:700px){
+  .conteudo{ padding:0 14px; }
+  .hero{ padding:40px 4px 70px; }
+  .hero h1{ font-size:clamp(40px,12vw,63px); letter-spacing:1px; }
+  .hero .slogan{ font-size:17px; letter-spacing:1px; }
+  .hero .descricao{ font-size:17px; }
+  .acoes-hero{ flex-direction:column; }
+  .acao-hero{ width:min(100%,320px); min-width:0; }
+  .secao-cards{ margin-top:50px; }
+  .cards{ gap:16px; }
+  .morcego{ font-size:18px; }
+  .rodape{ margin-top:20px; padding:28px 12px 22px; }
+  .rodape-agencia{ font-size:17px; letter-spacing:2px; }
+  .rodape-idade{ font-size:15px; }
+  .rodape-final{ font-size:13px; }
+}
+
+@media(max-width:360px){
+  .menu{ grid-template-columns:1fr; }
+  .marca-lux{ font-size:25px; }
+  .btn-entrar{ padding:0 12px; }
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  .morcegos{ display:none; }
+  *{ transition:none !important; }
+}
+
+</style>
+</head>
+<body>
+<div class="morcegos" aria-hidden="true">
 <span class="morcego">🦇</span>
 <span class="morcego">🦇</span>
 <span class="morcego">🦇</span>
 <span class="morcego">🦇</span>
 <span class="morcego">🦇</span>
 <span class="morcego">🦇</span>
-
 <span class="morcego">🦇</span>
 <span class="morcego">🦇</span>
 <span class="morcego">🦇</span>
 <span class="morcego">🦇</span>
 <span class="morcego">🦇</span>
-
-</div><!-- ==================================================
-     CONTEÚDO PRINCIPAL
-================================================== --><div class="conteudo">  <!-- ==================================================
-       CABEÇALHO
-  ================================================== -->  <header><!-- MARCA -->
-
-<a
-  class="marca-header"
-  href="./index.html"
-  aria-label="LUX Advance"
->
-
-  <span class="marca-lux">
-    LUX
-  </span>
-
-  <span class="marca-advance">
-    ADVANCE
-  </span>
-
-</a>
-
-
-<!-- ENTRAR -->
-
-<div class="botoes-acesso">
-
-  <a
-    class="btn-entrar"
-    href="./login.html"
-    aria-label="Entrar na LUX"
-  >
-
-    <i class="fa-solid fa-right-to-bracket"></i>
-
-    <span>ENTRAR</span>
-
-  </a>
-
+<span class="morcego">🦇</span>
 </div>
 
-  </header>  <!-- ==================================================
-       MENU PRINCIPAL
-  ================================================== -->  <nav
-    class="menu-area"
-    aria-label="Menu principal"
-  ><div class="menu">
+<header class="topo">
+  <div class="barra">
+    <a class="marca-header" href="./index.html" aria-label="LUX Advance">
+      <span class="marca-lux">LUX</span>
+      <span class="marca-advance">ADVANCE</span>
+    </a>
 
+    <nav class="menu-area" id="menu-principal" aria-label="Menu principal">
+      <div class="menu">
+        <a href="./index.html" class="ativo" aria-current="page"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Início</span></a>
+        <a href="./vitrine.html"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i><span>Loja</span></a>
+        <a href="./planos.html"><i class="fa-solid fa-gem" aria-hidden="true"></i><span>Planos</span></a>
+        <a href="./acesso-admin.html" class="admin"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span>Área Admin</span></a>
+        <a href="./agendar.html"><i class="fa-regular fa-calendar-days" aria-hidden="true"></i><span>Agendar</span></a>
+        <a href="./termos.html"><i class="fa-solid fa-file-lines" aria-hidden="true"></i><span>Termos</span></a>
+        <a href="./doar-pix.html" class="pix"><i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>Doar PIX</span></a>
+      </div>
+    </nav>
 
-  <a
-    href="./index.html"
-    class="ativo"
-  >
+    <div class="acesso">
+      <a class="btn-entrar" href="./login.html" aria-label="Entrar na LUX"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i><span>ENTRAR</span></a>
+      <button class="btn-menu" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-principal"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</header>
 
-    <i class="fa-solid fa-house"></i>
+<div class="conteudo">
+  <main class="hero">
+    <h1>LUX ADVANCE</h1>
+    <div class="slogan">Sensualidade &amp; Sofisticação</div>
+    <p class="descricao">Mais que um site, uma experiência. Um ambiente exclusivo criado para conexões, presença e experiências dentro da identidade LUX.</p>
 
-    <span>Início</span>
+    <div class="acoes-hero">
+      <a class="acao-hero principal" href="./vitrine.html"><i class="fa-solid fa-gem" aria-hidden="true"></i><span>Ver Vitrine</span></a>
+      <a class="acao-hero secundario" href="./planos.html"><i class="fa-solid fa-star" aria-hidden="true"></i><span>Conhecer Planos</span></a>
+      <a class="acao-hero principal" href="./doar-pix.html"><i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>Doar via PIX</span></a>
+    </div>
 
-  </a>
-
-
-  <a href="./vitrine.html">
-
-    <i class="fa-solid fa-bag-shopping"></i>
-
-    <span>Loja</span>
-
-  </a>
-
-
-  <a href="./planos.html">
-
-    <i class="fa-solid fa-gem"></i>
-
-    <span>Planos</span>
-
-  </a>
-
-
-  <a
-    href="./acesso-admin.html"
-    class="admin"
-  >
-
-    <i class="fa-solid fa-shield-halved"></i>
-
-    <span>Área Admin</span>
-
-  </a>
-
-
-  <a href="./agendar.html">
-
-    <i class="fa-regular fa-calendar-days"></i>
-
-    <span>Agendar</span>
-
-  </a>
-
-
-  <a href="./termos.html">
-
-    <i class="fa-solid fa-file-lines"></i>
-
-    <span>Termos</span>
-
-  </a>
-
-
-  <a
-    href="./doar-pix.html"
-    class="pix"
-  >
-
-    <i class="fa-solid fa-qrcode"></i>
-
-    <span>Doar PIX</span>
-
-  </a>
-
-
+    <section class="secao-cards" aria-labelledby="titulo-atalhos">
+      <h2 id="titulo-atalhos">Explore a LUX</h2>
+      <ul class="cards">
+        <li><a class="card" href="./vitrine.html"><span class="card-icone"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span><h3>Loja</h3><p>Conheça o catálogo exclusivo da identidade LUX.</p><span class="card-cta">Ver vitrine <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></a></li>
+        <li><a class="card" href="./planos.html"><span class="card-icone"><i class="fa-solid fa-gem" aria-hidden="true"></i></span><h3>Planos</h3><p>Escolha o plano ideal para a sua experiência.</p><span class="card-cta">Conhecer planos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></a></li>
+        <li><a class="card" href="./agendar.html"><span class="card-icone"><i class="fa-regular fa-calendar-days" aria-hidden="true"></i></span><h3>Agendar</h3><p>Reserve seu horário com praticidade e discrição.</p><span class="card-cta">Agendar agora <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></a></li>
+        <li><a class="card" href="./doar-pix.html"><span class="card-icone"><i class="fa-solid fa-qrcode" aria-hidden="true"></i></span><h3>Doar via PIX</h3><p>Apoie a LUX de forma rápida e segura.</p><span class="card-cta">Doar via PIX <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></a></li>
+        <li><a class="card" href="./termos.html"><span class="card-icone"><i class="fa-solid fa-file-lines" aria-hidden="true"></i></span><h3>Termos</h3><p>Leia as regras e condições de uso da plataforma.</p><span class="card-cta">Ler termos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></a></li>
+        <li><a class="card" href="./acesso-admin.html"><span class="card-icone"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span><h3>Área Admin</h3><p>Acesso restrito para a administração da LUX.</p><span class="card-cta">Acessar área <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></a></li>
+      </ul>
+    </section>
+  </main>
 </div>
 
-  </nav>  <!-- ==================================================
-       HERO LUX ADVANCE
-  ================================================== -->  <main class="hero"><h1>
-  LUX ADVANCE
-</h1>
+<footer class="rodape">
+  <div class="rodape-agencia">LUX — ADVANCE</div>
+  <div class="rodape-idade">Experiência exclusiva para maiores de 18 anos.</div>
+  <div class="rodape-final">© LUX Advance — Todos os direitos reservados.</div>
+</footer>
 
-
-<div class="slogan">
-
-  Sensualidade &amp; Sofisticação
-
-</div>
-
-
-<p class="descricao">
-
-  Mais que um site, uma experiência.
-  Um ambiente exclusivo criado para conexões,
-  presença e experiências dentro da identidade LUX.
-
-</p>
-
-
-<div class="acoes-hero">
-
-
-  <a
-    class="acao-hero principal"
-    href="./vitrine.html"
-  >
-
-    <i class="fa-solid fa-gem"></i>
-
-    <span>Ver Vitrine</span>
-
-  </a>
-
-
-  <a
-    class="acao-hero secundario"
-    href="./planos.html"
-  >
-
-    <i class="fa-solid fa-star"></i>
-
-    <span>Conhecer Planos</span>
-
-  </a>
-
-
-  <a
-    class="acao-hero principal"
-    href="./doar-pix.html"
-  >
-
-    <i class="fa-solid fa-qrcode"></i>
-
-    <span>Doar via PIX</span>
-
-  </a>
-
-
-</div>
-
-  </main></div><!-- ==================================================
-     RODAPÉ
-================================================== --><footer class="rodape">  <div class="rodape-agencia">LUX — ADVANCE
-
-  </div>  <div class="rodape-idade">Experiência exclusiva para maiores de 18 anos.
-
-  </div>  <div class="rodape-final">© LUX Advance — Todos os direitos reservados.
-
-  </div></footer>  <script src="./pwa.js"></script>
-</body></html>
+<script>
+(function(){
+  var btn=document.querySelector(".btn-menu");
+  var menu=document.getElementById("menu-principal");
+  if(!btn||!menu)return;
+  function set(aberto){
+    menu.classList.toggle("aberto",aberto);
+    btn.setAttribute("aria-expanded",aberto?"true":"false");
+    btn.setAttribute("aria-label",aberto?"Fechar menu":"Abrir menu");
+  }
+  btn.addEventListener("click",function(){set(!menu.classList.contains("aberto"));});
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"&&menu.classList.contains("aberto")){set(false);btn.focus();}
+  });
+})();
+</script>
+<script src="./pwa.js"></script>
+</body>
+</html>
