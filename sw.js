@@ -1,14 +1,14 @@
-const CACHE_NAME = 'lux-app-v2';
+const CACHE_NAME = 'lux-app-v3';
 const ARQUIVOS = [
   './',
   './index.html',
-  './banner.jpg',
-  './foto-ilustr.png',
-  './videobanner.mp4',
+  './lux-halloween.jpg',
+  './halloween-feminina.jpg',
+  './logo4.png',
+  './icone-lux-192.png',
+  './icone-lux-512.png',
   './vip1.png',
-  './vip2.png',
-  './vip3.png',
-  './vip4.png'
+  './vip3.png'
 ];
 
 // Instala e guarda arquivos
