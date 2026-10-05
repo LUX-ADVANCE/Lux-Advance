@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="./icone-lux-192.png">
+<meta name="theme-color" content="#080708">
+<link rel="manifest" href="./manifest.json">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LUX Store | Produtos Sensuais</title>
@@ -96,5 +101,6 @@ function build(d){const itens=cart.map(i=>`- ${i.name} x${i.qty} (${brl(i.price*
 checkoutForm.addEventListener('submit',e=>{e.preventDefault();const d=formData();if(!valid(d))return alert('Preencha os campos obrigatórios e adicione itens ao carrinho.');window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(build(d))}`,"_blank");setTimeout(()=>{cart=[];nome.value="";cpf.value="";email.value="";telefone.value="";cep.value="";endereco.value="";numero.value="";complemento.value="";bairro.value="";cidade.value="";estado.value="";pagamento.value="PIX";renderCart()},500)});
 renderProducts();renderCart();
 </script>
+  <script src="./pwa.js"></script>
 </body>
 </html>
