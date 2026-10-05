@@ -62,6 +62,15 @@
         return;
       }
 
+      const autorizado =
+        window.LuxAdminGuard
+          ? await window.LuxAdminGuard.verificar()
+          : false;
+
+      if (!autorizado) {
+        return;
+      }
+
       configurarFiltros();
 
       configurarBotoesStatus();
