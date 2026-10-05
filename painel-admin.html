@@ -5,6 +5,8 @@
 
   <meta charset="UTF-8">
 
+  <meta name="robots" content="noindex, nofollow">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1"
@@ -31,6 +33,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script src="./config.js"></script>
+
+  <script src="./admin-guard.js"></script>
 
 
   <style>
@@ -1986,92 +1990,26 @@
         }
 
 
-        try {
+        const autorizado =
+          window.LuxAdminGuard
+            ? await window.LuxAdminGuard.verificar()
+            : false;
 
-          const {
-            data,
-            error
-          } =
-            await supabase.auth.getSession();
-
-
-          if (
-            error ||
-            !data ||
-            !data.session
-          ) {
-
-            window.location.href =
-              "./acesso-admin.html";
-
-            return;
-
-          }
-
-
-          const session =
-            data.session;
-
-
-          const email =
-            session.user &&
-            session.user.email
-              ? session.user.email
-              : "";
-
-
-          if (
-            !window.LUX_ADMIN_EMAIL ||
-            email.toLowerCase() !==
-              window.LUX_ADMIN_EMAIL.toLowerCase()
-          ) {
-
-            await supabase.auth.signOut();
-
-            window.location.href =
-              "./acesso-admin.html";
-
-            return;
-
-          }
-
-
-          statusOnline.textContent =
-            "Administrador conectado";
-
-
-        } catch (erro) {
-
-          console.error(
-            "Erro na autenticação administrativa:",
-            erro
-          );
-
-          window.location.href =
-            "./acesso-admin.html";
-
+        if (!autorizado) {
+          return;
         }
+
+        statusOnline.textContent =
+          "Administrador conectado";
 
 
         btnSair.addEventListener(
           "click",
           async function () {
 
-            try {
-
-              await supabase.auth.signOut();
-
-            } catch (erro) {
-
-              console.error(
-                "Erro ao sair:",
-                erro
-              );
-
-            }
-
-            window.location.href =
-              "./acesso-admin.html";
+            await window.LuxAdminGuard.sair(
+              "Você saiu da área administrativa."
+            );
 
           }
         );
