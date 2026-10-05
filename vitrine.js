@@ -18,12 +18,26 @@
   const normalize = value => String(value ?? "").trim().toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
+  const requestedCategory = normalize(new URLSearchParams(window.location.search).get("categoria"))
+    .replace("lgbtq+", "lgbtq");
+  if (["feminino", "masculino", "lgbtq"].includes(requestedCategory)) {
+    state.category = requestedCategory;
+    const selected = document.querySelector(`[data-category="${requestedCategory}"]`);
+    if (selected) {
+      document.querySelectorAll("#categoryFilters [data-category]").forEach(button => {
+        const active = button === selected;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+    }
+  }
+
   function verified(profile) {
     return ["verificada", "verificado", "aprovada", "aprovado"].includes(normalize(profile.verificacao_status));
   }
 
   function planFor(profile) {
-    const code = normalize(profile.selo_codigo || profile.plano_codigo || profile.plano_nome);
+    const code = normalize([profile.selo_codigo, profile.plano_codigo, profile.plano_nome].filter(Boolean).join(" "));
     if (code.includes("diamond")) return "diamond";
     if (["royal", "elite", "desfire", "desire", "vip"].some(name => code.includes(name))) return "vip";
     return "essence";
@@ -140,9 +154,14 @@
     return phone;
   }
 
-  async function handleContact(profile, action) {
+  async function handleContact(profile, action, button) {
     const client = window.luxSupabase;
     if (!client) return showNotice("Não foi possível conectar ao serviço de acesso. Atualize a página e tente novamente.");
+    const originalLabel = button?.textContent;
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Conectando…";
+    }
     try {
       const { data: { session } } = await client.auth.getSession();
       if (!session?.user) return openRegistration(profile, action);
@@ -154,6 +173,11 @@
     } catch (error) {
       console.error("[LUX vitrine] Não foi possível concluir o contato.");
       showNotice(error?.message || "Não foi possível obter o contato. Tente novamente.");
+    } finally {
+      if (button?.isConnected) {
+        button.disabled = false;
+        button.textContent = originalLabel;
+      }
     }
   }
 
@@ -178,7 +202,7 @@
   function populateCities() {
     const cities = [...new Set(state.profiles.map(profile => String(profile.cidade || "").trim()).filter(Boolean))]
       .sort((a, b) => a.localeCompare(b, "pt-BR"));
-    cityFilter.innerHTML = `<option value="">Todas as cidades</option>${cities.map(city => `<option value="${escapeHTML(city)}">${escapeHTML(city)}</option>`).join("")}`;
+    cityFilter.innerHTML = `<button class="filter-chip is-active" type="button" data-city="" aria-pressed="true">Todas</button>${cities.map(city => `<button class="filter-chip" type="button" data-city="${escapeHTML(city)}" aria-pressed="false">${escapeHTML(city)}</button>`).join("")}`;
   }
 
   async function loadProfiles() {
@@ -209,8 +233,15 @@
     const button = event.target.closest("[data-plan]");
     if (button) setFilter("planFilters", "plan", button.dataset.plan);
   });
-  cityFilter.addEventListener("change", () => {
-    state.city = cityFilter.value;
+  cityFilter.addEventListener("click", event => {
+    const button = event.target.closest("[data-city]");
+    if (!button) return;
+    state.city = button.dataset.city;
+    cityFilter.querySelectorAll("[data-city]").forEach(chip => {
+      const active = chip === button;
+      chip.classList.toggle("is-active", active);
+      chip.setAttribute("aria-pressed", String(active));
+    });
     render();
   });
   grid.addEventListener("click", event => {
@@ -218,7 +249,11 @@
       state.category = "todas";
       state.city = "";
       state.plan = "todos";
-      cityFilter.value = "";
+      cityFilter.querySelectorAll("[data-city]").forEach((chip, index) => {
+        const active = index === 0;
+        chip.classList.toggle("is-active", active);
+        chip.setAttribute("aria-pressed", String(active));
+      });
       setFilter("categoryFilters", "category", "todas");
       setFilter("planFilters", "plan", "todos");
       return;
@@ -227,7 +262,7 @@
     const button = event.target.closest("[data-contact]");
     if (!button) return;
     const profile = state.profiles.find(item => item.id === button.dataset.contact);
-    if (profile) handleContact(profile, button.dataset.action);
+    if (profile) handleContact(profile, button.dataset.action, button);
   });
   document.querySelectorAll("[data-close-dialog]").forEach(button => {
     button.addEventListener("click", () => button.closest("dialog").close());

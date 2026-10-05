@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="./icone-lux-192.png">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080708">
+  <title>Sem conexão — LUX</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./app.css">
+  <style>
+    body{min-height:100vh;display:grid;place-items:center;padding:24px;text-align:center}
+    main{width:min(520px,100%);padding:36px 24px;border:1px solid rgba(240,216,120,.25);border-radius:20px;background:#121013}
+    .mark{color:#f0d878;font:600 13px Cinzel,serif;letter-spacing:.25em}
+    h1{margin:18px 0 10px;font:500 clamp(30px,7vw,46px) "Playfair Display",serif}
+    p{color:#b9afb4;line-height:1.7}
+    a{min-height:44px;margin-top:10px;padding:0 18px;display:inline-flex;align-items:center;border-radius:9px;color:#17120b;background:#f0d878;font-weight:700}
+    a:focus-visible{outline:3px solid white;outline-offset:3px}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="mark">LUX ADVANCE</div>
+    <h1>Você está sem conexão</h1>
+    <p>A vitrine não conseguiu se conectar agora. Confira sua internet e tente novamente.</p>
+    <a href="./index.html">Tentar novamente</a>
+  </main>
+  <script src="./pwa.js"></script>
+</body>
+</html>

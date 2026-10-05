@@ -195,23 +195,6 @@
   font-weight: 700;
 }
 
-.city-filter select {
-  min-height: 42px;
-  width: 100%;
-  padding: 0 34px 0 12px;
-  border: 1px solid rgba(255,255,255,.16);
-  border-radius: 10px;
-  color: var(--vitrine-text);
-  background: #171216;
-  font: inherit;
-  font-size: 13px;
-}
-
-.city-filter option {
-  color: var(--vitrine-text);
-  background: #171216;
-}
-
 .result-count {
   min-height: 20px;
   margin: 21px 2px 15px;
@@ -366,7 +349,6 @@
 
 .lux-button:focus-visible,
 .filter-chip:focus-visible,
-.city-filter select:focus-visible,
 .vitrine-nav a:focus-visible,
 .dialog-close:focus-visible {
   outline: 3px solid #fff0ad;

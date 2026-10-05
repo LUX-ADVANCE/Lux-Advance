@@ -42,12 +42,12 @@
             <button class="filter-chip" type="button" data-category="lgbtq" aria-pressed="false">LGBTQIA+</button>
           </div>
         </div>
-        <label class="city-filter" for="cityFilter">
-          <span class="filter-label">Cidade</span>
-          <select id="cityFilter">
-            <option value="">Todas as cidades</option>
-          </select>
-        </label>
+        <div class="filter-group">
+          <span class="filter-label" id="city-label">Cidade</span>
+          <div class="filter-chips" id="cityFilter" role="group" aria-labelledby="city-label">
+            <button class="filter-chip is-active" type="button" data-city="" aria-pressed="true">Todas</button>
+          </div>
+        </div>
         <div class="filter-group">
           <span class="filter-label" id="plan-label">Plano</span>
           <div class="filter-chips" id="planFilters" role="group" aria-labelledby="plan-label">

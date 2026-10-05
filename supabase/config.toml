@@ -1,0 +1,10 @@
+project_id = "lardmkeyyifmgbjrcfhn"
+
+[functions.criar-assinatura]
+verify_jwt = true
+
+[functions.mercadopago-webhook]
+verify_jwt = false
+
+[functions.notificar-modelo-pendente]
+verify_jwt = false
