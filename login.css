@@ -322,3 +322,15 @@ body::before{
   }
 
 }
+
+/* Animated, premium sign-up/login */
+@keyframes luxFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes luxGlow{0%,100%{box-shadow:0 20px 60px rgba(0,0,0,.45)}50%{box-shadow:0 20px 70px rgba(201,162,39,.16)}}
+.login-card{animation:luxFadeUp .7s cubic-bezier(.2,.8,.2,1) both,luxGlow 6s ease-in-out infinite}
+.login-logo,.login-brand{animation:luxFadeUp .8s .1s cubic-bezier(.2,.8,.2,1) both}
+.login-card input,.login-card select{transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease}
+.login-card input:focus,.login-card select:focus{box-shadow:0 0 0 3px rgba(240,216,120,.18);transform:translateY(-1px)}
+.btn-primary{transition:transform .25s ease,filter .25s ease}
+.btn-primary:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn-primary:active{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){.login-card,.login-logo,.login-brand{animation:none}}

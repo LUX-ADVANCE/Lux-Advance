@@ -1,10 +1,8 @@
-const CACHE_NAME = 'lux-app-v2';
+const CACHE_NAME = 'lux-app-v3';
 const ARQUIVOS = [
   './',
   './index.html',
-  './banner.jpg',
-  './foto-ilustr.png',
-  './videobanner.mp4',
+  './logo4.png',
   './vip1.png',
   './vip2.png',
   './vip3.png',
@@ -14,7 +12,7 @@ const ARQUIVOS = [
 // Instala e guarda arquivos
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ARQUIVOS))
+    caches.open(CACHE_NAME).then(cache => Promise.all(ARQUIVOS.map(a => cache.add(a).catch(() => {}))))
   );
 });
 

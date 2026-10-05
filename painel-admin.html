@@ -1279,6 +1279,63 @@
 
     }
 
+
+    /* Premium motion */
+    @keyframes luxCardIn {
+      from { opacity: 0; transform: translateY(14px) scale(.98); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .admin-card {
+      overflow: hidden;
+      animation: luxCardIn .6s cubic-bezier(.2,.8,.2,1) both;
+      transition:
+        transform .35s cubic-bezier(.2,.8,.2,1),
+        border-color .3s ease,
+        box-shadow .35s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .admin-card:nth-child(2) { animation-delay: .05s; }
+    .admin-card:nth-child(3) { animation-delay: .1s; }
+    .admin-card:nth-child(4) { animation-delay: .15s; }
+    .admin-card:nth-child(5) { animation-delay: .2s; }
+    .admin-card:nth-child(6) { animation-delay: .25s; }
+    .admin-card:nth-child(7) { animation-delay: .3s; }
+    .admin-card:nth-child(8) { animation-delay: .35s; }
+    .admin-card:nth-child(9) { animation-delay: .4s; }
+
+    .admin-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 35%, rgba(248,213,138,.12) 50%, transparent 65%);
+      transform: translateX(-120%);
+      transition: transform .8s ease;
+      pointer-events: none;
+    }
+
+    .admin-card:hover::after { transform: translateX(120%); }
+
+    .admin-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 50px rgba(0,0,0,.35), 0 0 0 1px rgba(248,213,138,.12);
+    }
+
+    .admin-card:active { transform: scale(.97); }
+
+    .admin-card .icon { transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+    .admin-card:hover .icon { transform: scale(1.1) rotate(-4deg); }
+
+    .admin-card:focus-visible {
+      outline: 2px solid rgba(248,213,138,.6);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .admin-card, .admin-card::after, .admin-card .icon { animation: none; transition: none; }
+    }
+
   </style>
 
 </head>
