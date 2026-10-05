@@ -18,7 +18,7 @@ body{
       rgba(5,3,5,.68),
       rgba(5,3,5,.88)
     ),
-    url("banner.jpg") center center / cover no-repeat fixed,
+    url("./halloween-feminina.jpg") center center / cover no-repeat fixed,
     #0c0809;
 
   display:flex;
@@ -83,6 +83,22 @@ body::before{
 
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
+  animation:loginCardEnter .42s cubic-bezier(.2,.75,.25,1) both;
+  transition:border-color .2s ease,box-shadow .2s ease;
+}
+
+.login-card:hover{
+  border-color:rgba(240,216,120,.62);
+  box-shadow:0 24px 68px rgba(0,0,0,.62),0 0 38px rgba(110,15,46,.22);
+}
+
+@keyframes loginCardEnter{
+  from{opacity:0;transform:translateY(14px) scale(.985)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .login-card{animation:none}
 }
 
 .marca{
@@ -143,6 +159,15 @@ body::before{
     0 0 0 3px rgba(240,216,120,.08);
 }
 
+.login-card input:user-invalid{
+  border-color:rgba(255,107,125,.8);
+  box-shadow:0 0 0 3px rgba(255,107,125,.1);
+}
+
+.login-card input:user-valid{
+  border-color:rgba(83,216,138,.55);
+}
+
 .login-card button{
   width:100%;
 
@@ -175,6 +200,16 @@ body::before{
 .login-card button:hover{
   transform:translateY(-1px);
   filter:brightness(1.05);
+}
+
+.login-card button:active{
+  transform:scale(.985);
+}
+
+.login-card button:disabled{
+  cursor:wait;
+  opacity:.75;
+  transform:none;
 }
 
 .senha-link{
