@@ -2,8 +2,15 @@
 <html lang="pt-BR">
 
 <head>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="./icone-lux-192.png">
+<meta name="theme-color" content="#080708">
+<link rel="manifest" href="./manifest.json">
 
   <meta charset="UTF-8">
+
+  <meta name="robots" content="noindex, nofollow">
 
   <meta
     name="viewport"
@@ -31,6 +38,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script src="./config.js"></script>
+
+  <script src="./admin-guard.js"></script>
 
 
   <style>
@@ -1279,6 +1288,63 @@
 
     }
 
+
+    /* Premium motion */
+    @keyframes luxCardIn {
+      from { opacity: 0; transform: translateY(14px) scale(.98); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .admin-card {
+      overflow: hidden;
+      animation: luxCardIn .6s cubic-bezier(.2,.8,.2,1) both;
+      transition:
+        transform .35s cubic-bezier(.2,.8,.2,1),
+        border-color .3s ease,
+        box-shadow .35s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .admin-card:nth-child(2) { animation-delay: .05s; }
+    .admin-card:nth-child(3) { animation-delay: .1s; }
+    .admin-card:nth-child(4) { animation-delay: .15s; }
+    .admin-card:nth-child(5) { animation-delay: .2s; }
+    .admin-card:nth-child(6) { animation-delay: .25s; }
+    .admin-card:nth-child(7) { animation-delay: .3s; }
+    .admin-card:nth-child(8) { animation-delay: .35s; }
+    .admin-card:nth-child(9) { animation-delay: .4s; }
+
+    .admin-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 35%, rgba(248,213,138,.12) 50%, transparent 65%);
+      transform: translateX(-120%);
+      transition: transform .8s ease;
+      pointer-events: none;
+    }
+
+    .admin-card:hover::after { transform: translateX(120%); }
+
+    .admin-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 50px rgba(0,0,0,.35), 0 0 0 1px rgba(248,213,138,.12);
+    }
+
+    .admin-card:active { transform: scale(.97); }
+
+    .admin-card .icon { transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+    .admin-card:hover .icon { transform: scale(1.1) rotate(-4deg); }
+
+    .admin-card:focus-visible {
+      outline: 2px solid rgba(248,213,138,.6);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .admin-card, .admin-card::after, .admin-card .icon { animation: none; transition: none; }
+    }
+
   </style>
 
 </head>
@@ -1929,92 +1995,26 @@
         }
 
 
-        try {
+        const autorizado =
+          window.LuxAdminGuard
+            ? await window.LuxAdminGuard.verificar()
+            : false;
 
-          const {
-            data,
-            error
-          } =
-            await supabase.auth.getSession();
-
-
-          if (
-            error ||
-            !data ||
-            !data.session
-          ) {
-
-            window.location.href =
-              "./acesso-admin.html";
-
-            return;
-
-          }
-
-
-          const session =
-            data.session;
-
-
-          const email =
-            session.user &&
-            session.user.email
-              ? session.user.email
-              : "";
-
-
-          if (
-            !window.LUX_ADMIN_EMAIL ||
-            email.toLowerCase() !==
-              window.LUX_ADMIN_EMAIL.toLowerCase()
-          ) {
-
-            await supabase.auth.signOut();
-
-            window.location.href =
-              "./acesso-admin.html";
-
-            return;
-
-          }
-
-
-          statusOnline.textContent =
-            "Administrador conectado";
-
-
-        } catch (erro) {
-
-          console.error(
-            "Erro na autenticação administrativa:",
-            erro
-          );
-
-          window.location.href =
-            "./acesso-admin.html";
-
+        if (!autorizado) {
+          return;
         }
+
+        statusOnline.textContent =
+          "Administrador conectado";
 
 
         btnSair.addEventListener(
           "click",
           async function () {
 
-            try {
-
-              await supabase.auth.signOut();
-
-            } catch (erro) {
-
-              console.error(
-                "Erro ao sair:",
-                erro
-              );
-
-            }
-
-            window.location.href =
-              "./acesso-admin.html";
+            await window.LuxAdminGuard.sair(
+              "Você saiu da área administrativa."
+            );
 
           }
         );
@@ -2691,6 +2691,7 @@
   <script src="./painel-admin.js"></script>
 
 
+  <script src="./pwa.js"></script>
 </body>
 
 </html>

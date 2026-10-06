@@ -62,6 +62,15 @@
         return;
       }
 
+      const autorizado =
+        window.LuxAdminGuard
+          ? await window.LuxAdminGuard.verificar()
+          : false;
+
+      if (!autorizado) {
+        return;
+      }
+
       configurarFiltros();
 
       configurarBotoesStatus();
@@ -3609,6 +3618,15 @@
         white-space:nowrap;
       }
 
+      .lux-status::before {
+        width:7px;
+        height:7px;
+        flex:0 0 7px;
+        border-radius:50%;
+        background:currentColor;
+        content:"";
+      }
+
       .lux-status b {
         font-size:13px;
       }
@@ -3720,6 +3738,11 @@
       .lux-btn-ficha:hover {
         background:rgba(248,213,138,.12);
         border-color:rgba(248,213,138,.5);
+      }
+
+      .lux-btn-ficha:focus-visible {
+        outline:2px solid #f8d58a;
+        outline-offset:3px;
       }
 
       .lux-btn-ficha b {
@@ -4252,6 +4275,20 @@
 
         .lux-modal-content {
           padding:14px;
+        }
+
+        .modal-footer {
+          display:grid;
+          grid-template-columns:repeat(2,minmax(0,1fr));
+        }
+
+        .modal-footer .btn {
+          width:100%;
+        }
+
+        #botao-imprimir,
+        #botao-fechar-ficha {
+          grid-column:1/-1;
         }
 
       }

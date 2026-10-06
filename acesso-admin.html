@@ -2,8 +2,15 @@
 <html lang="pt-BR">
 
 <head>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="./icone-lux-192.png">
+<meta name="theme-color" content="#080708">
+<link rel="manifest" href="./manifest.json">
 
 <meta charset="UTF-8">
+
+<meta name="robots" content="noindex, nofollow">
 
 <meta
   name="viewport"
@@ -303,6 +310,50 @@ body{
 
 }
 
+
+[hidden]{display:none!important}
+
+.etapa-mfa,
+#formAdmin{
+  animation:luxEtapa .35s ease both;
+}
+
+@keyframes luxEtapa{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
+}
+
+.bloco-qr{
+  text-align:center;
+  margin-bottom:18px;
+}
+
+.bloco-qr .dica{
+  color:#aaa;
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:12px;
+}
+
+.bloco-qr img{
+  background:#fff;
+  padding:8px;
+  border-radius:12px;
+}
+
+.chave{
+  display:block;
+  margin-top:10px;
+  color:#f8d58a;
+  font-size:12px;
+  word-break:break-all;
+}
+
+.campo input.codigo{
+  text-align:center;
+  letter-spacing:.5em;
+  font-size:22px;
+}
 </style>
 
 </head>
@@ -323,10 +374,26 @@ Acesso Administrativo
 
 <div class="subtitulo">
 Área exclusiva de administração.
-Digite sua senha para continuar.
+Entre com e-mail, senha e código de verificação.
 </div>
 
-<form id="formAdmin">
+<form id="formAdmin" novalidate>
+
+<div class="campo">
+
+<label for="emailAdmin">
+E-mail administrativo
+</label>
+
+<input
+  id="emailAdmin"
+  type="email"
+  autocomplete="username"
+  placeholder="Digite seu e-mail"
+  required
+>
+
+</div>
 
 <div class="campo">
 
@@ -354,14 +421,65 @@ ENTRAR NO PAINEL
 
 </form>
 
+<form id="formMfa" class="etapa-mfa" novalidate hidden>
+
+<div id="blocoQr" class="bloco-qr" hidden>
+
+<p class="dica">
+1. Abra o Google Authenticator, Authy ou similar.<br>
+2. Escaneie o QR Code abaixo (ou digite a chave).<br>
+3. Digite o código de 6 dígitos gerado.
+</p>
+
+<img id="qrCode" alt="QR Code para configurar o autenticador" width="180" height="180">
+
+<code id="chaveSecreta" class="chave"></code>
+
+</div>
+
+<div class="campo">
+
+<label for="codigoMfa">
+Código de 6 dígitos
+</label>
+
+<input
+  id="codigoMfa"
+  type="text"
+  inputmode="numeric"
+  autocomplete="one-time-code"
+  maxlength="6"
+  pattern="[0-9]{6}"
+  placeholder="000000"
+  class="codigo"
+  required
+>
+
+</div>
+
+<button
+  id="btnMfa"
+  class="botao"
+  type="submit"
+>
+VERIFICAR CÓDIGO
+</button>
+
+<button
+  id="btnCancelarMfa"
+  class="voltar"
+  type="button"
+>
+Cancelar e sair
+</button>
+
+</form>
+
 <div
   id="mensagem"
   class="mensagem"
-></div>
-
-<div
-  id="adminEmail"
-  class="admin-email"
+  role="alert"
+  aria-live="polite"
 ></div>
 
 <a
@@ -381,334 +499,376 @@ document.addEventListener(
   "DOMContentLoaded",
   async function(){
 
-    const form =
-      document.getElementById("formAdmin");
+    const supabase = window.luxSupabase;
 
-    const senhaInput =
-      document.getElementById("senhaAdmin");
+    const formAdmin = document.getElementById("formAdmin");
+    const formMfa = document.getElementById("formMfa");
+    const emailInput = document.getElementById("emailAdmin");
+    const senhaInput = document.getElementById("senhaAdmin");
+    const codigoInput = document.getElementById("codigoMfa");
+    const btnEntrar = document.getElementById("btnEntrar");
+    const btnMfa = document.getElementById("btnMfa");
+    const btnCancelar = document.getElementById("btnCancelarMfa");
+    const mensagem = document.getElementById("mensagem");
+    const blocoQr = document.getElementById("blocoQr");
+    const qrCode = document.getElementById("qrCode");
+    const chaveSecreta = document.getElementById("chaveSecreta");
+    const subtitulo = document.querySelector(".subtitulo");
 
-    const botao =
-      document.getElementById("btnEntrar");
+    const CHAVE_MSG = "lux_admin_msg";
+    const CHAVE_TENTATIVAS = "lux_admin_tentativas";
+    const MSG_GENERICA = "E-mail, senha ou acesso inválidos.";
 
-    const mensagem =
-      document.getElementById("mensagem");
-
-    const adminEmail =
-      document.getElementById("adminEmail");
-
-
-    /* =====================================================
-       ADMINISTRADOR AUTORIZADO
-       ===================================================== */
-
-    const EMAIL_ADMIN =
-      "luxcdam@gmail.com";
-
-
-    adminEmail.textContent =
-      "Administrador: " + EMAIL_ADMIN;
+    let ocupado = false;
+    let fatorId = null;
+    let modoConfigurar = false;
+    let cooldownTimer = null;
 
 
-    /* =====================================================
-       MENSAGEM
-       ===================================================== */
-
-    function mostrarMensagem(
-      texto,
-      tipo
-    ){
-
-      mensagem.textContent =
-        texto;
-
-      mensagem.className =
-        "mensagem " + tipo;
-
+    function mostrarMensagem(texto, tipo){
+      mensagem.textContent = texto || "";
+      mensagem.className = "mensagem" + (tipo ? " " + tipo : "");
     }
 
 
-    /* =====================================================
-       VERIFICAR SUPABASE
-       ===================================================== */
+    /* ---------- limite de tentativas (cooldown progressivo) ---------- */
 
-    if(!window.luxSupabase){
+    function lerTentativas(){
+      try{
+        return JSON.parse(localStorage.getItem(CHAVE_TENTATIVAS)) ||
+          { falhas: 0, ate: 0 };
+      }catch(e){
+        return { falhas: 0, ate: 0 };
+      }
+    }
 
-      mostrarMensagem(
-        "Erro ao carregar o Supabase. Verifique o config.js.",
-        "erro"
-      );
+    function gravarTentativas(dados){
+      try{
+        localStorage.setItem(CHAVE_TENTATIVAS, JSON.stringify(dados));
+      }catch(e){}
+    }
 
+    function registrarFalha(){
+      const t = lerTentativas();
+      t.falhas += 1;
+      if(t.falhas >= 3){
+        const segundos = Math.min(900, 15 * Math.pow(2, t.falhas - 3));
+        t.ate = Date.now() + segundos * 1000;
+      }
+      gravarTentativas(t);
+      aplicarCooldown();
+    }
+
+    function limparFalhas(){
+      gravarTentativas({ falhas: 0, ate: 0 });
+    }
+
+    function emCooldown(){
+      return lerTentativas().ate > Date.now();
+    }
+
+    function aplicarCooldown(){
+      clearInterval(cooldownTimer);
+      if(!emCooldown()){
+        btnEntrar.disabled = false;
+        btnMfa.disabled = false;
+        return;
+      }
+      function tick(){
+        const restante = Math.ceil((lerTentativas().ate - Date.now()) / 1000);
+        if(restante <= 0){
+          clearInterval(cooldownTimer);
+          btnEntrar.disabled = false;
+          btnMfa.disabled = false;
+          mostrarMensagem("");
+          return;
+        }
+        btnEntrar.disabled = true;
+        btnMfa.disabled = true;
+        mostrarMensagem(
+          "Muitas tentativas. Aguarde " + restante + "s para tentar novamente.",
+          "erro"
+        );
+      }
+      tick();
+      cooldownTimer = setInterval(tick, 1000);
+    }
+
+
+    /* ---------- telas ---------- */
+
+    function mostrarEtapaMfa(){
+      formAdmin.hidden = true;
+      formMfa.hidden = false;
+      subtitulo.textContent = modoConfigurar
+        ? "Configure a verificação em duas etapas para proteger o painel."
+        : "Digite o código do seu aplicativo autenticador.";
+      blocoQr.hidden = !modoConfigurar;
+      codigoInput.value = "";
+      codigoInput.focus();
+    }
+
+    async function cancelar(){
+      try{ await supabase.auth.signOut(); }catch(e){}
+      window.location.reload();
+    }
+
+
+    /* ---------- MFA ---------- */
+
+    async function prepararMfa(){
+
+      const fatores = await supabase.auth.mfa.listFactors();
+
+      if(fatores.error){
+        throw fatores.error;
+      }
+
+      const verificado = (fatores.data.totp || []).find(function(f){
+        return f.status === "verified";
+      });
+
+      if(verificado){
+        fatorId = verificado.id;
+        modoConfigurar = false;
+        mostrarEtapaMfa();
+        return;
+      }
+
+      const todos = (fatores.data.all || []);
+      for(const f of todos){
+        if(f.factor_type === "totp" && f.status !== "verified"){
+          await supabase.auth.mfa.unenroll({ factorId: f.id });
+        }
+      }
+
+      const novo = await supabase.auth.mfa.enroll({
+        factorType: "totp",
+        friendlyName: "LUX Admin " + Date.now()
+      });
+
+      if(novo.error){
+        throw novo.error;
+      }
+
+      fatorId = novo.data.id;
+      modoConfigurar = true;
+      qrCode.src = novo.data.totp.qr_code;
+      chaveSecreta.textContent = novo.data.totp.secret;
+      mostrarEtapaMfa();
+    }
+
+    async function exigirAdminEMfa(){
+
+      const admin = await supabase.rpc("sou_admin");
+
+      if(admin.error || admin.data !== true){
+        await supabase.auth.signOut();
+        return false;
+      }
+
+      const aal = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+
+      if(!aal.error && aal.data && aal.data.currentLevel === "aal2"){
+        const final = await supabase.rpc("is_admin");
+        if(final.data === true){
+          limparFalhas();
+          window.location.replace("./painel-admin.html");
+          return true;
+        }
+      }
+
+      await prepararMfa();
+      return true;
+    }
+
+
+    if(!supabase){
+      mostrarMensagem("Erro ao carregar o Supabase. Verifique o config.js.", "erro");
+      btnEntrar.disabled = true;
       return;
-
     }
 
-
-    /* =====================================================
-       VERIFICAR SESSÃO EXISTENTE
-       ===================================================== */
 
     try{
+      const aviso = sessionStorage.getItem(CHAVE_MSG);
+      if(aviso){
+        sessionStorage.removeItem(CHAVE_MSG);
+        mostrarMensagem(aviso, "erro");
+      }
+    }catch(e){}
 
-      const resultado =
-        await window.luxSupabase.auth.getSession();
+    aplicarCooldown();
 
-      const sessao =
-        resultado.data?.session;
 
-      if(
-        sessao &&
-        sessao.user &&
-        sessao.user.email &&
-        sessao.user.email.toLowerCase() ===
-        EMAIL_ADMIN.toLowerCase()
-      ){
+    /* ---------- sessão existente ---------- */
 
-        mostrarMensagem(
-          "Sessão administrativa encontrada. Abrindo painel...",
-          "sucesso"
-        );
+    try{
+      const atual = await supabase.auth.getSession();
+      if(atual.data && atual.data.session){
+        ocupado = true;
+        const ok = await exigirAdminEMfa();
+        ocupado = false;
+        if(!ok){
+          mostrarMensagem("");
+        }
+      }
+    }catch(e){
+      ocupado = false;
+    }
 
-        setTimeout(
-          function(){
 
-            window.location.replace(
-              "./painel-admin.html"
-            );
+    /* ---------- etapa 1: e-mail + senha ---------- */
 
-          },
-          500
-        );
+    formAdmin.addEventListener("submit", async function(evento){
+
+      evento.preventDefault();
+
+      if(ocupado || emCooldown()){
+        return;
+      }
+
+      const email = emailInput.value.trim();
+      const senha = senhaInput.value;
+
+      if(!email || !senha){
+        mostrarMensagem("Informe e-mail e senha.", "erro");
+        return;
+      }
+
+      ocupado = true;
+      btnEntrar.disabled = true;
+      btnEntrar.textContent = "ENTRANDO...";
+      mostrarMensagem("");
+
+      try{
+
+        const resultado = await supabase.auth.signInWithPassword({
+          email: email,
+          password: senha
+        });
+
+        if(resultado.error || !resultado.data || !resultado.data.user){
+          throw new Error("login");
+        }
+
+        const ok = await exigirAdminEMfa();
+
+        if(!ok){
+          throw new Error("nao-admin");
+        }
+
+      }catch(erro){
+
+        registrarFalha();
+
+        if(!emCooldown()){
+          mostrarMensagem(MSG_GENERICA, "erro");
+        }
+
+      }finally{
+
+        ocupado = false;
+        senhaInput.value = "";
+        btnEntrar.textContent = "ENTRAR NO PAINEL";
+
+        if(!emCooldown()){
+          btnEntrar.disabled = false;
+        }
+
+      }
+
+    });
+
+
+    /* ---------- etapa 2: código TOTP ---------- */
+
+    formMfa.addEventListener("submit", async function(evento){
+
+      evento.preventDefault();
+
+      if(ocupado || emCooldown()){
+        return;
+      }
+
+      const codigo = codigoInput.value.replace(/\D/g, "");
+
+      if(codigo.length !== 6){
+        mostrarMensagem("Digite o código de 6 dígitos.", "erro");
+        return;
+      }
+
+      ocupado = true;
+      btnMfa.disabled = true;
+      btnMfa.textContent = "VERIFICANDO...";
+      mostrarMensagem("");
+
+      try{
+
+        const desafio = await supabase.auth.mfa.challenge({ factorId: fatorId });
+
+        if(desafio.error){
+          throw desafio.error;
+        }
+
+        const verificacao = await supabase.auth.mfa.verify({
+          factorId: fatorId,
+          challengeId: desafio.data.id,
+          code: codigo
+        });
+
+        if(verificacao.error){
+          throw verificacao.error;
+        }
+
+        await supabase.auth.refreshSession();
+
+        const final = await supabase.rpc("is_admin");
+
+        if(final.error || final.data !== true){
+          throw new Error("nao-admin");
+        }
+
+        limparFalhas();
+        mostrarMensagem("Acesso autorizado. Abrindo painel...", "sucesso");
+        btnMfa.textContent = "ACESSO AUTORIZADO";
+
+        setTimeout(function(){
+          window.location.replace("./painel-admin.html");
+        }, 500);
 
         return;
 
-      }
+      }catch(erro){
 
-    }catch(erro){
+        registrarFalha();
 
-      console.warn(
-        "Erro ao verificar sessão:",
-        erro
-      );
-
-    }
-
-
-    /* =====================================================
-       LOGIN
-       ===================================================== */
-
-    form.addEventListener(
-      "submit",
-      async function(evento){
-
-        evento.preventDefault();
-
-
-        const senha =
-          senhaInput.value.trim();
-
-
-        if(!senha){
-
-          mostrarMensagem(
-            "Digite a senha administrativa.",
-            "erro"
-          );
-
-          return;
-
+        if(!emCooldown()){
+          mostrarMensagem("Código inválido ou expirado. Tente novamente.", "erro");
         }
 
-
-        botao.disabled =
-          true;
-
-        botao.textContent =
-          "ENTRANDO...";
-
-        mensagem.className =
-          "mensagem";
-
-        mensagem.textContent =
-          "";
-
-
-        try{
-
-          const resultado =
-            await window.luxSupabase.auth.signInWithPassword({
-
-              email:
-                EMAIL_ADMIN,
-
-              password:
-                senha
-
-            });
-
-
-          if(resultado.error){
-
-            throw resultado.error;
-
-          }
-
-
-          const usuario =
-            resultado.data?.user;
-
-
-          if(!usuario){
-
-            throw new Error(
-              "Não foi possível confirmar o usuário."
-            );
-
-          }
-
-
-          /* =================================================
-             PROTEÇÃO DO E-MAIL ADMINISTRATIVO
-             ================================================= */
-
-          if(
-            !usuario.email ||
-            usuario.email.toLowerCase() !==
-            EMAIL_ADMIN.toLowerCase()
-          ){
-
-            await window.luxSupabase.auth.signOut();
-
-            throw new Error(
-              "Esta conta não possui autorização administrativa."
-            );
-
-          }
-
-
-          /* =================================================
-             ACESSO AUTORIZADO
-             ================================================= */
-
-          mostrarMensagem(
-            "Acesso autorizado. Abrindo painel...",
-            "sucesso"
-          );
-
-
-          botao.textContent =
-            "ACESSO AUTORIZADO";
-
-
-          setTimeout(
-            function(){
-
-              window.location.replace(
-                "./painel-admin.html"
-              );
-
-            },
-            700
-          );
-
-
-        }catch(erro){
-
-          console.error(
-            "Erro no acesso administrativo:",
-            erro
-          );
-
-
-          let texto =
-            "Senha incorreta ou acesso não autorizado.";
-
-
-          if(
-            erro &&
-            erro.message
-          ){
-
-            const erroSupabase =
-              erro.message.toLowerCase();
-
-
-            if(
-              erroSupabase.includes(
-                "invalid login credentials"
-              )
-            ){
-
-              texto =
-                "Senha incorreta. Verifique a senha da conta administrativa.";
-
-            }
-
-            else if(
-              erroSupabase.includes(
-                "email not confirmed"
-              )
-            ){
-
-              texto =
-                "Confirme o e-mail administrativo no Supabase antes de entrar.";
-
-            }
-
-            else if(
-              erroSupabase.includes(
-                "user not found"
-              )
-            ){
-
-              texto =
-                "A conta administrativa não foi encontrada.";
-
-            }
-
-            else if(
-              erroSupabase.includes(
-                "rate limit"
-              )
-            ){
-
-              texto =
-                "Muitas tentativas. Aguarde alguns minutos.";
-
-            }
-
-            else{
-
-              texto =
-                erro.message;
-
-            }
-
-          }
-
-
-          mostrarMensagem(
-            texto,
-            "erro"
-          );
-
-
-          botao.disabled =
-            false;
-
-          botao.textContent =
-            "ENTRAR NO PAINEL";
-
-        }
+        codigoInput.value = "";
+        codigoInput.focus();
 
       }
-    );
+
+      ocupado = false;
+      btnMfa.textContent = "VERIFICAR CÓDIGO";
+
+      if(!emCooldown()){
+        btnMfa.disabled = false;
+      }
+
+    });
+
+    btnCancelar.addEventListener("click", cancelar);
 
   }
 );
 
 </script>
 
+  <script src="./pwa.js"></script>
 </body>
 
 </html>
